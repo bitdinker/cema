@@ -1,0 +1,74 @@
+@page "/cars/{CarId:int}/expenses"
+@using Cema.Models
+
+<h3>Expenses for Car @CarId</h3>
+
+@if (Expenses == null)
+{
+    <p><em>Loading expenses...</em></p>
+}
+else if (Expenses.Count == 0)
+{
+    <p>No expenses recorded for this car yet.</p>
+}
+else
+{
+    <h4>Expenses</h4>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>@* Consider formatting date *@
+                <th>Supplier</th>
+                <th>Amount</th>@* Consider currency formatting *@
+                <th>Group</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var expense in Expenses)
+            <tr>
+                <td>@expense.Date.ToShortDateString()</td>
+                <td>@expense.Supplier</td>
+                <td>@expense.Amount.ToString("C")</td>@* Example currency formatting *@
+                <td>@expense.Group</td>@* Assuming Group is a string for now, will link to ExpenseGroup later *@
+                <td>
+                    <button>Edit</button>
+                    <button>Delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+}
+
+<div>
+    <button class="btn btn-primary" @onclick="AddNewExpense">Add New Expense</button>
+</div>
+
+@code {
+    [Parameter]
+    public int CarId { get; set; }
+
+    // Placeholder for expense list property
+    public List<Expense> Expenses { get; set; }
+
+    [Inject]
+    private Data.DatabaseHelper DatabaseHelper { get; set; }
+
+    [Inject]
+    private NavigationManager NavigationManager { get; set; }
+
+    // Placeholder for fetching expenses and car details
+    protected override async Task OnInitializedAsync()
+    {
+        Expenses = DatabaseHelper.GetExpensesByCarId(CarId);
+        // TODO: Fetch car details for CarId to display at the top
+    }
+
+    // Placeholder for Add New Expense button action
+    void AddNewExpense()
+    {
+        // Navigate to the expense recording form, passing the CarId
+        NavigationManager.NavigateTo($"/cars/{CarId}/expenses/add"); // We'll define this route later
+    }
+}

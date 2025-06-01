@@ -1,0 +1,76 @@
+@page "/carform"
+@page "/carform/{Id:int?}"
+
+<h3>@Title</h3>
+
+<EditForm Model="@Car" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="name">Car Name:</label>
+        <InputText id="name" class="form-control" @bind-Value="Car.Name" />
+        <ValidationMessage For="@(() => Car.Name)" />
+    </div>
+
+    <div class="form-group">
+        <label for="licensePlate">License Plate:</label>
+        <InputText id="licensePlate" class="form-control" @bind-Value="Car.LicensePlate" />
+        <ValidationMessage For="@(() => Car.LicensePlate)" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button> @* Bind Save button to HandleValidSubmit *@
+    <button type="button" class="btn btn-secondary" @onclick="HandleCancel">Cancel</button> @* Bind Cancel button to HandleCancel *@
+
+</EditForm>
+
+@code {
+    [Parameter]
+    public int? Id { get; set; }
+
+    private Car Car = new Car();
+    private string Title = "Add New Car";
+
+    [Inject]
+    private DatabaseHelper DatabaseHelper { get; set; }
+
+    [Inject]
+    private NavigationManager NavigationManager { get; set; }
+
+    protected override void OnInitialized()
+    {
+        if (Id.HasValue)
+        {
+            Title = "Edit Car";
+            // In a real application, you would fetch the car data here based on Id
+             Car = DatabaseHelper.GetCarById(Id.Value); // Need to implement GetCarById in DatabaseHelper
+             if(Car == null)
+             {
+                 // Handle case where car is not found, maybe navigate back to list
+                 NavigationManager.NavigateTo("/carlist");
+             }
+        }
+    }
+
+    private void HandleValidSubmit() // This method will be called when the form is submitted and valid
+    {
+        if (Id.HasValue)
+        {
+            // Update existing car
+            DatabaseHelper.UpdateCar(Car);
+        }
+        else
+        {
+            // Add new car
+            DatabaseHelper.InsertCar(Car);
+        }
+
+        NavigationManager.NavigateTo("/carlist");
+    }
+
+    private void HandleCancel() // This method will be called when the Cancel button is clicked
+    {
+        NavigationManager.NavigateTo("/carlist");
+    }
+
+}

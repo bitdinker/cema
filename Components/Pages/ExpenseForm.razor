@@ -1,0 +1,98 @@
+@page "/expenseform/{CarId:int}"
+@page "/expenseform/{CarId:int}/{ExpenseId:int?}"
+
+<h3>Expense Details</h3>
+
+<EditForm Model="@Expense" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+
+    <div class="form-group">
+        <label for="date">Date:</label>
+        <InputDate id="date" class="form-control" @bind-Value="Expense.Date" />
+        <ValidationMessage For="@(() => Expense.Date)" />
+    </div>
+
+    <div class="form-group">
+        <label for="supplier">Supplier:</label>
+        <InputText id="supplier" class="form-control" @bind-Value="Expense.Supplier" />
+        <ValidationMessage For="@(() => Expense.Supplier)" />
+    </div>
+
+    <div class="form-group">
+        <label for="amount">Amount:</label>
+        <InputNumber id="amount" class="form-control" @bind-Value="Expense.Amount" />
+        <ValidationMessage For="@(() => Expense.Amount)" />
+    </div>
+
+    <div class="form-group">
+        <label for="group">Group:</label>
+        <InputSelect id="group" class="form-control" @bind-Value="Expense.GroupId">
+            <option value="">-- Select Group --</option>
+            @if (ExpenseGroups != null)
+            {
+                foreach (var group in ExpenseGroups)
+                {
+                    <option value="@group.Id">@group.Name</option>
+                }
+            }
+        </InputSelect>
+        <ValidationMessage For="@(() => Expense.GroupId)" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+    <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+
+</EditForm>
+
+@code {
+    [Parameter]
+    public int CarId { get; set; }
+
+    [Parameter]
+    public int? ExpenseId { get; set; }
+
+    private Expense Expense = new Expense();
+    private List<ExpenseGroup> ExpenseGroups;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Fetch expense groups to populate the dropdown
+        ExpenseGroups = Data.DatabaseHelper.GetExpenseGroups(); // Assuming you have this method
+
+        if (ExpenseId.HasValue)
+        {
+            // Fetch the expense for editing
+            Expense = Data.DatabaseHelper.GetExpenseById(ExpenseId.Value); // You'll need to create this method
+        }
+        else
+        {
+            // Set the CarId for a new expense
+            Expense.CarId = CarId;
+            // Initialize date for new expense
+            Expense.Date = DateTime.Today;
+        }
+    }
+
+    private void HandleValidSubmit()
+    {
+        if (ExpenseId.HasValue)
+        {
+            // Update existing expense
+            Data.DatabaseHelper.UpdateExpense(Expense); // Assuming you have this method
+        }
+        else
+        {
+            // Insert new expense
+            Data.DatabaseHelper.InsertExpense(Expense); // Assuming you have this method
+        }
+
+        // Navigate back to the expense list for the car
+        NavigationManager.NavigateTo($"/expenses/{CarId}");
+    }
+
+    private void Cancel()
+    {
+        // Navigate back to the expense list for the car
+        NavigationManager.NavigateTo($"/expenses/{CarId}");
+    }
+}

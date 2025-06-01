@@ -1,0 +1,43 @@
+@page "/expensegroups/form/{Id:int?}"
+@inject NavigationManager NavigationManager
+@using CEMA.Models
+
+<h3>@Title</h3>
+
+<EditForm Model="@ExpenseGroup" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="name">Group Name:</label>
+        <InputText id="name" class="form-control" @bind-Value="ExpenseGroup.Name" />
+        <ValidationMessage For="@(() => ExpenseGroup.Name)" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+    <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int? Id { get; set; }
+
+    public ExpenseGroup ExpenseGroup { get; set; } = new ExpenseGroup();
+
+    private string Title => Id.HasValue ? "Edit Expense Group" : "Add Expense Group";
+
+    protected override void OnInitialized()
+    {
+        // This will be handled in the code-behind
+    }
+
+    private void HandleValidSubmit()
+    {
+        // This will be handled in the code-behind
+    }
+
+    private void Cancel()
+    {
+        // This will be handled in the code-behind
+    }
+}

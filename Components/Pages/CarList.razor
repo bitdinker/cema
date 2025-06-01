@@ -1,0 +1,84 @@
+@page "/cars"
+@using CEMA.Models
+@using CEMA.Data
+@inject NavigationManager NavigationManager
+
+<h3>Car List</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Car Name</th>
+            <th>License Plate</th>
+            <th>Total Expenses</th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+            @foreach (var car in cars)
+            {
+                <tr>
+                    <td>@car.Name</td>
+                    <td>@car.LicensePlate</td>
+                    <td>@GetTotalExpenses(car.Id).ToString("C2")</td> @* Assuming currency format *@
+                    <td>
+                        <button class="btn btn-primary btn-sm" @onclick="() => EditCar(car.Id)">Edit</button>
+                    </td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" @onclick="() => DeleteCar(car.Id)">Delete</button>
+                    </td>
+                    <td>
+                        <button class="btn btn-info btn-sm" @onclick="() => ViewExpenses(car.Id)">View Expenses</button>
+                    </td>
+                </tr>
+            }
+    </tbody>
+</table>
+
+<button class="btn btn-success" @onclick="NavigateToAddCar">Add New Car</button>
+
+@code {
+    private List<Car> cars;
+    private List<Expense> allExpenses; // To calculate total expenses
+
+    protected override async Task OnInitializedAsync()
+    {
+        cars = DatabaseHelper.GetCars();
+        allExpenses = DatabaseHelper.GetExpenses(); // Assuming a GetExpenses method exists
+    }
+
+    private decimal GetTotalExpenses(int carId)
+    {
+        if (allExpenses == null) return 0;
+        return allExpenses.Where(e => e.CarId == carId).Sum(e => e.Amount);
+    }
+
+    private void EditCar(int carId)
+    {
+        NavigationManager.NavigateTo($"/editcar/{carId}");
+    }
+
+    private void DeleteCar(int carId)
+    {
+        // Implement confirmation before deleting
+        bool confirmed = true; // Replace with actual confirmation logic
+        if (confirmed)
+        {
+            DatabaseHelper.DeleteCar(carId);
+            cars = DatabaseHelper.GetCars(); // Refresh the list
+            allExpenses = DatabaseHelper.GetExpenses(); // Refresh expenses as well
+        }
+    }
+
+    private void ViewExpenses(int carId)
+    {
+        NavigationManager.NavigateTo($"/expenses/{carId}");
+    }
+
+    private void NavigateToAddCar()
+    {
+        NavigationManager.NavigateTo("/addcar");
+    }
+}

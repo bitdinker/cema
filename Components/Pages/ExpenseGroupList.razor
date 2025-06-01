@@ -1,0 +1,35 @@
+@page "/expensegroups"
+
+<h1>Expense Groups</h1>
+
+<p>
+    <a href="/expensegroupform">Create New</a>
+</p>
+
+@if (expenseGroups == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Group Name</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var group in expenseGroups)
+            {
+                <tr>
+                    <td>@group.Name</td>
+                    <td>
+                        <a href="/expensegroupform/@group.Id">Edit</a> |
+                        <button @onclick="(() => DeleteGroup(group.Id))" class="btn btn-danger btn-sm">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
