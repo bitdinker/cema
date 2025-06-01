@@ -1,16 +1,9 @@
-using Cema.Data;
-using Cema.Models;
 using Microsoft.AspNetCore.Components;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Linq;
 
 namespace Cema.Components.Pages
 {
     public partial class CarList : ComponentBase
     {
-        [Inject]
-        public DatabaseHelper DatabaseHelper { get; set; }
 
         [Inject]
         public NavigationManager NavigationManager { get; set; }

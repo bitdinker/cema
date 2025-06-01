@@ -1,15 +1,9 @@
-using Cema.Data;
-using Cema.Models;
 using Microsoft.AspNetCore.Components;
-using System.Threading.Tasks;
 
 namespace Cema.Components.Pages
 {
     public partial class ExpenseGroupForm : ComponentBase
     {
-        [Inject]
-        public DatabaseHelper DatabaseHelper { get; set; }
-
         [Inject]
         public NavigationManager NavigationManager { get; set; }
 

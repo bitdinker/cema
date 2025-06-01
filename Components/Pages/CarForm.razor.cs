@@ -1,14 +1,9 @@
 using Microsoft.AspNetCore.Components;
-using cema.Data;
-using cema.Models;
-using System.Threading.Tasks;
 
 namespace cema.Components.Pages
 {
     public partial class CarForm : ComponentBase
     {
-        [Inject]
-        public DatabaseHelper DatabaseHelper { get; set; }
 
         [Inject]
         public NavigationManager NavigationManager { get; set; }

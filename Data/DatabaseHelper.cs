@@ -1,5 +1,4 @@
 using Microsoft.Data.Sqlite;
-using System.IO;
 
 public static class DatabaseHelper
 {
@@ -103,14 +102,14 @@ public static class DatabaseHelper
         return null; // Or throw an exception if car not found
     }
 
- public static List<Car> GetAllCars()
+    public static List<Car> GetAllCars()
     {
         var cars = new List<Car>();
         using (var connection = new SqliteConnection(ConnectionString))
         {
             connection.Open();
 
- // Modify the SQL query to include the total accumulated expense
+            // Modify the SQL query to include the total accumulated expense
             var selectCommand = connection.CreateCommand();
             selectCommand.CommandText =
             @"
@@ -120,12 +119,12 @@ public static class DatabaseHelper
 
             // Use a LEFT JOIN to include cars with no expenses and sum the amount
             selectCommand.CommandText =
- @"
- SELECT C.Id, C.Name, C.LicensePlate, SUM(E.Amount) AS TotalExpenses
- FROM Cars AS C
- LEFT JOIN Expenses AS E ON C.Id = E.CarId
- GROUP BY C.Id, C.Name, C.LicensePlate
- ";
+             @"
+             SELECT C.Id, C.Name, C.LicensePlate, SUM(E.Amount) AS TotalExpenses
+             FROM Cars AS C
+             LEFT JOIN Expenses AS E ON C.Id = E.CarId
+             GROUP BY C.Id, C.Name, C.LicensePlate
+             ";
 
             using (var reader = selectCommand.ExecuteReader())
             {
@@ -177,127 +176,126 @@ public static class DatabaseHelper
         }
     }
 
- public static void InsertExpense(Expense expense)
+    public static void InsertExpense(Expense expense)
     {
- using (var connection = new SqliteConnection(ConnectionString))
- {
- connection.Open();
+        using (var connection = new SqliteConnection(ConnectionString))
+        {
+            connection.Open();
 
- var insertCommand = connection.CreateCommand();
- insertCommand.CommandText =
- @"
+            var insertCommand = connection.CreateCommand();
+            insertCommand.CommandText =
+            @"
  INSERT INTO Expenses (Date, Supplier, Amount, GroupId, CarId)
  VALUES (@Date, @Supplier, @Amount, @GroupId, @CarId)
  ";
- insertCommand.Parameters.AddWithValue("@Date", expense.Date.ToString("yyyy-MM-dd"));
- insertCommand.Parameters.AddWithValue("@Supplier", expense.Supplier);
- insertCommand.Parameters.AddWithValue("@Amount", expense.Amount);
- insertCommand.Parameters.AddWithValue("@GroupId", expense.GroupId);
- insertCommand.Parameters.AddWithValue("@CarId", expense.CarId);
- insertCommand.ExecuteNonQuery();
- }
+            insertCommand.Parameters.AddWithValue("@Date", expense.Date.ToString("yyyy-MM-dd"));
+            insertCommand.Parameters.AddWithValue("@Supplier", expense.Supplier);
+            insertCommand.Parameters.AddWithValue("@Amount", expense.Amount);
+            insertCommand.Parameters.AddWithValue("@GroupId", expense.GroupId);
+            insertCommand.Parameters.AddWithValue("@CarId", expense.CarId);
+            insertCommand.ExecuteNonQuery();
+        }
     }
 
- public static List<Expense> GetAllExpenses()
- {
- var expenses = new List<Expense>();
- using (var connection = new SqliteConnection(ConnectionString))
- {
- connection.Open();
+    public static List<Expense> GetAllExpenses()
+    {
+        var expenses = new List<Expense>();
+        using (var connection = new SqliteConnection(ConnectionString))
+        {
+            connection.Open();
 
- var selectCommand = connection.CreateCommand();
- selectCommand.CommandText =
- @"
+            var selectCommand = connection.CreateCommand();
+            selectCommand.CommandText =
+            @"
  SELECT Id, Date, Supplier, Amount, GroupId, CarId
  FROM Expenses
  ";
 
- using (var reader = selectCommand.ExecuteReader())
- {
- while (reader.Read())
- {
- expenses.Add(new Expense
- {
- Id = reader.GetInt32(0),
- Date = DateTime.Parse(reader.GetString(1)),
- Supplier = reader.GetString(2),
- Amount = reader.GetDecimal(3),
- GroupId = reader.GetInt32(4),
- CarId = reader.GetInt32(5)
- });
- }
- }
- }
- return expenses;
+            using (var reader = selectCommand.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    expenses.Add(new Expense
+                    {
+                        Id = reader.GetInt32(0),
+                        Date = DateTime.Parse(reader.GetString(1)),
+                        Supplier = reader.GetString(2),
+                        Amount = reader.GetDecimal(3),
+                        GroupId = reader.GetInt32(4),
+                        CarId = reader.GetInt32(5)
+                    });
+                }
+            }
+        }
+        return expenses;
     }
 
     public static List<Expense> GetExpensesByCarId(int carId)
     {
- var expenses = new List<Expense>();
- using (var connection = new SqliteConnection(ConnectionString))
- {
- connection.Open();
+        var expenses = new List<Expense>();
+        using (var connection = new SqliteConnection(ConnectionString))
+        {
+            connection.Open();
 
- var selectCommand = connection.CreateCommand();
- selectCommand.CommandText =
- @"
+            var selectCommand = connection.CreateCommand();
+            selectCommand.CommandText =
+            @"
  SELECT Id, Date, Supplier, Amount, GroupId, CarId
  FROM Expenses
  WHERE CarId = @CarId
  ";
- selectCommand.Parameters.AddWithValue("@CarId", carId);
+            selectCommand.Parameters.AddWithValue("@CarId", carId);
 
- using (var reader = selectCommand.ExecuteReader())
- {
- while (reader.Read())
- {
- expenses.Add(new Expense { Id = reader.GetInt32(0), Date = DateTime.Parse(reader.GetString(1)), Supplier = reader.GetString(2), Amount = reader.GetDecimal(3), GroupId = reader.GetInt32(4), CarId = reader.GetInt32(5) });
- }
- }
- }
- return expenses;
+            using (var reader = selectCommand.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    expenses.Add(new Expense { Id = reader.GetInt32(0), Date = DateTime.Parse(reader.GetString(1)), Supplier = reader.GetString(2), Amount = reader.GetDecimal(3), GroupId = reader.GetInt32(4), CarId = reader.GetInt32(5) });
+                }
+            }
+        }
+        return expenses;
     }
 
- public static void UpdateExpense(Expense expense)
- {
- using (var connection = new SqliteConnection(ConnectionString))
- {
- connection.Open();
+    public static void UpdateExpense(Expense expense)
+    {
+        using (var connection = new SqliteConnection(ConnectionString))
+        {
+            connection.Open();
 
- var updateCommand = connection.CreateCommand();
- updateCommand.CommandText =
- @"
+            var updateCommand = connection.CreateCommand();
+            updateCommand.CommandText =
+            @"
  UPDATE Expenses
  SET Date = @Date, Supplier = @Supplier, Amount = @Amount, GroupId = @GroupId, CarId = @CarId
  WHERE Id = @Id
  ";
- updateCommand.Parameters.AddWithValue("@Date", expense.Date.ToString("yyyy-MM-dd"));
- updateCommand.Parameters.AddWithValue("@Supplier", expense.Supplier);
- updateCommand.Parameters.AddWithValue("@Amount", expense.Amount);
- updateCommand.Parameters.AddWithValue("@GroupId", expense.GroupId);
- updateCommand.Parameters.AddWithValue("@CarId", expense.CarId);
- updateCommand.Parameters.AddWithValue("@Id", expense.Id);
- updateCommand.ExecuteNonQuery();
- }
- }
+            updateCommand.Parameters.AddWithValue("@Date", expense.Date.ToString("yyyy-MM-dd"));
+            updateCommand.Parameters.AddWithValue("@Supplier", expense.Supplier);
+            updateCommand.Parameters.AddWithValue("@Amount", expense.Amount);
+            updateCommand.Parameters.AddWithValue("@GroupId", expense.GroupId);
+            updateCommand.Parameters.AddWithValue("@CarId", expense.CarId);
+            updateCommand.Parameters.AddWithValue("@Id", expense.Id);
+            updateCommand.ExecuteNonQuery();
+        }
+    }
 
- public static void DeleteExpense(int id)
- {
- using (var connection = new SqliteConnection(ConnectionString))
- {
- connection.Open();
+    public static void DeleteExpense(int id)
+    {
+        using (var connection = new SqliteConnection(ConnectionString))
+        {
+            connection.Open();
 
- var deleteCommand = connection.CreateCommand();
- deleteCommand.CommandText =
- @"
+            var deleteCommand = connection.CreateCommand();
+            deleteCommand.CommandText =
+            @"
  DELETE FROM Expenses
  WHERE Id = @Id
  ";
- deleteCommand.Parameters.AddWithValue("@Id", id);
- deleteCommand.ExecuteNonQuery();
- }
- }
-}
+            deleteCommand.Parameters.AddWithValue("@Id", id);
+            deleteCommand.ExecuteNonQuery();
+        }
+    }
 
     public static void InsertExpenseGroup(ExpenseGroup group)
     {
@@ -372,3 +370,5 @@ public static class DatabaseHelper
             deleteCommand.ExecuteNonQuery();
         }
     }
+}
+

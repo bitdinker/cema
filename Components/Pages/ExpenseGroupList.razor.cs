@@ -1,15 +1,9 @@
 using Microsoft.AspNetCore.Components;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using cema.Data;
-using cema.Models;
 
 namespace cema.Components.Pages
 {
     public partial class ExpenseGroupList : ComponentBase
     {
-        [Inject]
-        public DatabaseHelper DatabaseHelper { get; set; }
 
         [Inject]
         public NavigationManager NavigationManager { get; set; }
@@ -18,7 +12,7 @@ namespace cema.Components.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            ExpenseGroups = DatabaseHelper.GetExpenseGroups();
+            ExpenseGroups = DatabaseHelper.GetAllExpenseGroups();
         }
 
         public void AddNewGroup()
