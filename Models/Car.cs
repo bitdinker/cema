@@ -1,4 +1,4 @@
-namespace Cema.Models;
+namespace CEMA.Models;
 
 public class Car
 {

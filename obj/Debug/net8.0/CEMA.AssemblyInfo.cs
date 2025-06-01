@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CEMA")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bc5943a98a2039fe2608b558f5f270f924db80ce")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d3df6762acd90dea8e05d980ef5e9cc0edbf17ba")]
 [assembly: System.Reflection.AssemblyProductAttribute("CEMA")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CEMA")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

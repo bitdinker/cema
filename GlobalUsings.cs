@@ -1,1 +1,1 @@
-﻿global using Cema.Models;
+﻿global using CEMA.Models;

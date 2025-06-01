@@ -257,6 +257,12 @@ public static class DatabaseHelper
         return expenses;
     }
 
+    public static ExpenseGroup GetExpenseGroupById(int carId)
+    {
+        //TODO
+        return null;
+    }
+
     public static void UpdateExpense(Expense expense)
     {
         using (var connection = new SqliteConnection(ConnectionString))

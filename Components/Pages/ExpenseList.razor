@@ -1,5 +1,5 @@
 @page "/cars/{CarId:int}/expenses"
-@using Cema.Models
+@using CEMA.Models
 
 <h3>Expenses for Car @CarId</h3>
 
@@ -27,16 +27,18 @@ else
         </thead>
         <tbody>
             @foreach (var expense in Expenses)
-            <tr>
-                <td>@expense.Date.ToShortDateString()</td>
-                <td>@expense.Supplier</td>
-                <td>@expense.Amount.ToString("C")</td>@* Example currency formatting *@
-                <td>@expense.Group</td>@* Assuming Group is a string for now, will link to ExpenseGroup later *@
-                <td>
-                    <button>Edit</button>
-                    <button>Delete</button>
-                </td>
-            </tr>
+            {
+                <tr>
+                    <td>@expense.Date.ToShortDateString()</td>
+                    <td>@expense.Supplier</td>
+                    <td>@expense.Amount.ToString("C")</td>@* Example currency formatting *@
+                    <td>@expense.Group</td>@* Assuming Group is a string for now, will link to ExpenseGroup later *@
+                    <td>
+                        <button>Edit</button>
+                        <button>Delete</button>
+                    </td>
+                </tr>
+            }
         </tbody>
     </table>
 }
@@ -51,9 +53,6 @@ else
 
     // Placeholder for expense list property
     public List<Expense> Expenses { get; set; }
-
-    [Inject]
-    private Data.DatabaseHelper DatabaseHelper { get; set; }
 
     [Inject]
     private NavigationManager NavigationManager { get; set; }

@@ -1,6 +1,5 @@
 @page "/cars"
 @using CEMA.Models
-@using CEMA.Data
 @inject NavigationManager NavigationManager
 
 <h3>Car List</h3>
@@ -45,8 +44,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        cars = DatabaseHelper.GetCars();
-        allExpenses = DatabaseHelper.GetExpenses(); // Assuming a GetExpenses method exists
+        cars = DatabaseHelper.GetAllCars();
+        allExpenses = DatabaseHelper.GetAllExpenses(); // Assuming a GetExpenses method exists
     }
 
     private decimal GetTotalExpenses(int carId)
@@ -67,8 +66,8 @@
         if (confirmed)
         {
             DatabaseHelper.DeleteCar(carId);
-            cars = DatabaseHelper.GetCars(); // Refresh the list
-            allExpenses = DatabaseHelper.GetExpenses(); // Refresh expenses as well
+            cars = DatabaseHelper.GetAllCars(); // Refresh the list
+            allExpenses = DatabaseHelper.GetAllExpenses(); // Refresh expenses as well
         }
     }
 
